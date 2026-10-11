@@ -35,8 +35,8 @@ describe('Models and Formatters', () => {
   it('contains valid presets for major models', () => {
     assert.ok(MODEL_SPECS['gemini-3.8-flash'].contextLimit >= 1000000);
     assert.ok(MODEL_SPECS['gemini-3.1-pro'].contextLimit >= 2000000);
-    assert.ok(MODEL_SPECS['claude-opus-5.5'].contextLimit === 200000);
-    assert.ok(MODEL_SPECS['claude-sonnet-5.5'].contextLimit === 200000);
+    assert.ok(MODEL_SPECS['claude-opus-5.5'].contextLimit >= 1000000);
+    assert.ok(MODEL_SPECS['claude-sonnet-5.5'].contextLimit >= 1000000);
     assert.ok(MODEL_SPECS['gpt-oss-120b'].contextLimit === 128000);
   });
 });

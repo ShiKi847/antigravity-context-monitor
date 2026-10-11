@@ -46,19 +46,19 @@ export const MODEL_SPECS = {
   },
   'claude-opus-5.5': {
     name: 'Claude Opus 5.5',
-    contextLimit: 200000, // 200k tokens
-    maxOutputTokens: 32768,
+    contextLimit: 1048576, // 1M tokens
+    maxOutputTokens: 128000,
     family: 'claude',
     tag: '新建',
-    description: 'Anthropic 最新顶级旗舰推理编程模型'
+    description: 'Anthropic 最新顶级旗舰 1M 超大上下文推理编程模型'
   },
   'claude-sonnet-5.5': {
     name: 'Claude Sonnet 5.5',
-    contextLimit: 200000, // 200k tokens
-    maxOutputTokens: 16384,
+    contextLimit: 1048576, // 1M tokens
+    maxOutputTokens: 64000,
     family: 'claude',
     tag: '新建',
-    description: 'Anthropic 最新均衡高性价比编程模型'
+    description: 'Anthropic 最新均衡高性价比 1M 上下文编程模型'
   },
   'gpt-oss-120b': {
     name: 'GPT-OSS 120B (Medium)',

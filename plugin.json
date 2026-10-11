@@ -1,0 +1,5 @@
+{
+  "name": "antigravity-context-monitor",
+  "description": "实时查看 Antigravity 对话上下文额度、Token 构成、缓存命中率与增长速率分析",
+  "logo": "assets/logo.svg"
+}

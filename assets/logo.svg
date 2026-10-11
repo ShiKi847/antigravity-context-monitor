@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1a73e8"/>
+      <stop offset="100%" stop-color="#0d47a1"/>
+    </linearGradient>
+    <linearGradient id="arc" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#34a853"/>
+      <stop offset="50%" stop-color="#fbbc04"/>
+      <stop offset="100%" stop-color="#ea4335"/>
+    </linearGradient>
+  </defs>
+  <!-- Background squircle -->
+  <rect x="4" y="4" width="56" height="56" rx="14" fill="url(#bg)"/>
+  
+  <!-- Outer gauge track -->
+  <circle cx="32" cy="34" r="18" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="4" stroke-dasharray="85 113" stroke-linecap="round" transform="rotate(135 32 34)"/>
+  
+  <!-- Active gauge arc -->
+  <circle cx="32" cy="34" r="18" fill="none" stroke="#69f0ae" stroke-width="4.5" stroke-dasharray="56 113" stroke-linecap="round" transform="rotate(135 32 34)"/>
+  
+  <!-- Center icon: Context token / chip -->
+  <path d="M30 22h4v3h-4zm-7 7h3v4h-3zm14 0h3v4h-3zm-7 7h4v3h-4z" fill="#ffffff" opacity="0.9"/>
+  <rect x="26" y="28" width="12" height="12" rx="3" fill="#ffffff"/>
+  <circle cx="32" cy="34" r="2.5" fill="#1a73e8"/>
+</svg>

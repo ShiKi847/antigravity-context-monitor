@@ -1,0 +1,18 @@
+{
+  "command": "node",
+  "args": ["main.mjs"],
+  "restart_policy": "always",
+  "display_name": "Context Monitor",
+  "description": "实时查看当前对话的上下文占用额度、缓存命中率、增长轨迹与消耗大户分析",
+  "has_web_ui": true,
+  "ui_config": {
+    "display_name": "Context Monitor",
+    "views": [
+      {
+        "path": "/",
+        "entrypoint": "SIDECAR_UI_ENTRYPOINT_AUX_PANE",
+        "title": "Context Monitor"
+      }
+    ]
+  }
+}

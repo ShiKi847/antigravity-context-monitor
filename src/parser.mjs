@@ -39,8 +39,9 @@ export function getConversationPaths(conversationId) {
 export function detectModelForConversation(conversationId) {
   const { dbPath } = getConversationPaths(conversationId);
   if (existsSync(dbPath)) {
+    let db;
     try {
-      const db = new DatabaseSync(dbPath, { readOnly: true });
+      db = new DatabaseSync(dbPath, { readOnly: true });
       const rows = db.prepare('SELECT data FROM gen_metadata WHERE data IS NOT NULL ORDER BY idx DESC LIMIT 10').all();
       for (const row of rows) {
         if (!row.data) continue;
@@ -62,6 +63,10 @@ export function detectModelForConversation(conversationId) {
       }
     } catch {
       // Ignore database read errors
+    } finally {
+      if (db) {
+        try { db.close(); } catch {}
+      }
     }
   }
 
@@ -92,27 +97,38 @@ export function listAllConversations() {
   const results = [];
 
   if (existsSync(summaryDbPath)) {
+    let db;
     try {
-      const db = new DatabaseSync(summaryDbPath, { readOnly: true });
+      db = new DatabaseSync(summaryDbPath, { readOnly: true });
       const rows = db.prepare(`
-        SELECT conversation_id, title, preview, step_count, last_modified_time
+        SELECT conversation_id, title, preview, step_count, last_modified_time, killed
         FROM conversation_summaries
+        WHERE killed = 0
         ORDER BY last_modified_time DESC
         LIMIT 50
       `).all();
 
       for (const r of rows) {
-        results.push({
-          conversationId: r.conversation_id,
-          title: r.title || 'Untitled Conversation',
-          preview: r.preview || '',
-          stepCount: r.step_count || 0,
-          lastModified: r.last_modified_time || ''
-        });
+        // Verify files still exist on disk so deleted/pruned sessions don't linger
+        const transcriptPath = join(appDataDir, 'brain', r.conversation_id, '.system_generated', 'logs', 'transcript.jsonl');
+        const dbPath = join(appDataDir, 'conversations', `${r.conversation_id}.db`);
+        if (existsSync(transcriptPath) || existsSync(dbPath)) {
+          results.push({
+            conversationId: r.conversation_id,
+            title: r.title || 'Untitled Conversation',
+            preview: r.preview || '',
+            stepCount: r.step_count || 0,
+            lastModified: r.last_modified_time || ''
+          });
+        }
       }
       return results;
     } catch (err) {
       console.warn('Failed to query conversation_summaries.db:', err.message);
+    } finally {
+      if (db) {
+        try { db.close(); } catch {}
+      }
     }
   }
 

@@ -67,28 +67,44 @@ async function apiFetch(path, options = {}) {
 // Conversation & Stats Loading
 // ---------------------------------------------------------------------------
 
-async function loadConversations() {
+let lastConvsKey = '';
+
+async function loadConversations(force = false) {
   try {
     const convs = await apiFetch('/api/conversations');
     const select = $('conv-select');
-    select.innerHTML = '';
+    if (!select) return;
 
     if (!Array.isArray(convs) || convs.length === 0) {
-      select.innerHTML = '<option value="">无可用会话</option>';
+      if (lastConvsKey !== '[]') {
+        lastConvsKey = '[]';
+        select.innerHTML = '<option value="">无可用会话</option>';
+      }
       return;
     }
 
-    // Determine initial conversation ID:
-    // 1) From window.sidecar.conversationId
-    // 2) From current select
-    // 3) First conversation in list
+    // Fast check if the conversation list has changed
+    const currentKey = convs.map((c) => `${c.conversationId}:${c.stepCount}:${c.title}`).join('|');
+    if (!force && currentKey === lastConvsKey) {
+      return;
+    }
+    lastConvsKey = currentKey;
+
+    // Check if the current selected conversation still exists
     const hostConvId = sidecar?.conversationId;
-    if (hostConvId && convs.some((c) => c.conversationId === hostConvId)) {
-      currentConvId = hostConvId;
-    } else if (!currentConvId || !convs.some((c) => c.conversationId === currentConvId)) {
-      currentConvId = convs[0].conversationId;
+    const exists = convs.some((c) => c.conversationId === currentConvId);
+
+    if (!exists) {
+      if (hostConvId && convs.some((c) => c.conversationId === hostConvId)) {
+        currentConvId = hostConvId;
+      } else {
+        currentConvId = convs[0].conversationId;
+      }
+      fetchStats();
     }
 
+    // Rebuild options while preserving selection
+    select.innerHTML = '';
     for (const c of convs) {
       const opt = document.createElement('option');
       opt.value = c.conversationId;
@@ -540,7 +556,10 @@ async function saveSettingsFromModal() {
 function restartPolling() {
   if (refreshTimer) clearInterval(refreshTimer);
   if (appSettings.autoRefresh) {
-    refreshTimer = setInterval(fetchStats, appSettings.refreshIntervalMs || 2000);
+    refreshTimer = setInterval(async () => {
+      await loadConversations();
+      await fetchStats();
+    }, appSettings.refreshIntervalMs || 2000);
   }
 }
 
@@ -623,10 +642,36 @@ async function init() {
   } catch {}
 
   // Event Listeners
-  $('conv-select').addEventListener('change', (e) => {
-    currentConvId = e.target.value;
-    fetchStats();
-  });
+  const convSelect = $('conv-select');
+  if (convSelect) {
+    convSelect.addEventListener('change', (e) => {
+      currentConvId = e.target.value;
+      fetchStats();
+    });
+    // Immediately refresh list before user picks from dropdown
+    convSelect.addEventListener('mousedown', () => loadConversations(true));
+    convSelect.addEventListener('focus', () => loadConversations(true));
+  }
+
+  // Refresh conversations button
+  const btnRefreshConvs = $('btn-refresh-convs');
+  if (btnRefreshConvs) {
+    btnRefreshConvs.addEventListener('click', async () => {
+      btnRefreshConvs.classList.add('spinning');
+      await loadConversations(true);
+      await fetchStats();
+      showToast('已同步最新会话列表');
+      setTimeout(() => btnRefreshConvs.classList.remove('spinning'), 600);
+    });
+  }
+
+  // Listen to host workspace or conversation changes
+  if (sidecar && typeof sidecar.onWorkspaceChange === 'function') {
+    sidecar.onWorkspaceChange(() => {
+      loadConversations(true);
+      fetchStats();
+    });
+  }
 
   // Chart range tabs
   document.querySelectorAll('.tab-btn').forEach((btn) => {

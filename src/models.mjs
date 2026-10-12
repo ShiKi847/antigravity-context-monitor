@@ -4,13 +4,21 @@
 
 export const MODEL_SPECS = {
   // Official Antigravity current lineup
+  'gemini-3.8-flash-host': {
+    name: 'Gemini 3.8 Flash (宿主配额 256k)',
+    contextLimit: 256000, // 256k tokens host budget
+    maxOutputTokens: 65536,
+    family: 'gemini',
+    tag: '推荐',
+    description: 'Antigravity 客户端单会话滑动窗口与自动截断警戒阈值 (256K)'
+  },
   'gemini-3.8-flash': {
     name: 'Gemini 3.8 Flash',
     contextLimit: 1048576, // 1M tokens
     maxOutputTokens: 65536,
     family: 'gemini',
-    tag: '默认',
-    description: 'Antigravity 当前主力高速 1M 上下文模型'
+    tag: '物理上限',
+    description: 'Gemini 3.8 Flash 物理底层 1M 上下文硬件架构极限'
   },
   'gemini-3.8-flash-n': {
     name: 'Gemini 3.8 Flash',

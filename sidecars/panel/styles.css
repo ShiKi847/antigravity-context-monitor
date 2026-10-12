@@ -235,6 +235,39 @@ body {
   text-overflow: ellipsis;
 }
 
+.icon-btn-sm {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
+  background: var(--bg);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+}
+
+.icon-btn-sm:hover {
+  background: var(--hover-overlay);
+  color: var(--text-primary);
+  border-color: var(--text-muted);
+}
+
+.icon-btn-sm:active {
+  transform: scale(0.92);
+}
+
+.icon-btn-sm.spinning svg {
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  100% { transform: rotate(360deg); }
+}
+
 .model-badge {
   display: inline-block;
   padding: 3px 8px;

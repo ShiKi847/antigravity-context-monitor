@@ -45,6 +45,11 @@
         <select id="conv-select" class="conv-select" title="选择要查看的会话">
           <option value="">载入会话列表中...</option>
         </select>
+        <button id="btn-refresh-convs" class="icon-btn-sm" title="立即刷新会话列表" aria-label="立即刷新会话列表">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
+            <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
+          </svg>
+        </button>
       </div>
       <div class="model-badge-wrapper">
         <span id="model-badge" class="model-badge" title="当前模型限制">Gemini 3.8 Flash (1M)</span>
@@ -205,7 +210,8 @@
           <div class="form-group">
             <label class="form-label" for="setting-model-select">模型额度预设</label>
             <select id="setting-model-select" class="form-select">
-              <option value="gemini-3.8-flash">Gemini 3.8 Flash (1,048,576 / 1M tokens) [默认]</option>
+              <option value="gemini-3.8-flash-host">Gemini 3.8 Flash (256,000 / 256k tokens) [Antigravity 宿主配额 · 推荐]</option>
+              <option value="gemini-3.8-flash">Gemini 3.8 Flash (1,048,576 / 1M tokens) [模型物理上限]</option>
               <option value="gemini-3.7-flash">Gemini 3.7 Flash (1,048,576 / 1M tokens) [即将停用]</option>
               <option value="gemini-3.6-flash">Gemini 3.6 Flash (1,048,576 / 1M tokens) [即将停用]</option>
               <option value="gemini-3.1-pro">Gemini 3.1 Pro (2,097,152 / 2M tokens) [即将停用]</option>
@@ -240,6 +246,7 @@
             <div class="quick-preset-chips">
               <button type="button" class="preset-chip" data-tokens="128000">128k</button>
               <button type="button" class="preset-chip" data-tokens="200000">200k</button>
+              <button type="button" class="preset-chip" data-tokens="256000">256k</button>
               <button type="button" class="preset-chip" data-tokens="500000">500k</button>
               <button type="button" class="preset-chip" data-tokens="1048576">1M</button>
               <button type="button" class="preset-chip" data-tokens="2097152">2M</button>
